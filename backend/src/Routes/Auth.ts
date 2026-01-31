@@ -67,5 +67,12 @@ AuthRouter.post("/login",async (req  : Request, res : Response)=>{
     })
     })
 
+AuthRouter.get("/logout", (req , res)=>{
+    res.clearCookie("auth_token")
+    return res.json({
+        msg : " sucesslfuy logged out"
+    })
+
+})
 
 export default AuthRouter
