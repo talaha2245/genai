@@ -34,10 +34,87 @@ const handleGetAllUsers = async (req: userinfo, res: Response) => {
     }
 }
 
-const handleGetAllUsersId = async(req : userinfo, res : Response)=>{
+const handleGetAllUsersId = async (req: userinfo, res: Response) => {
+    const username = req.username
+    const id = req.params.name as string
+    try {
+        const response = await User.find({})
+        const data = response.filter((item) => {
+            if (item.username?.toLowerCase().includes(id) && item.username != username) {
+                return true
+            }
+            else {
+                return false
+            }
+        }).map((items) => {
+            return items.username
+        })
+        return res.status(200).json({
+            msg: "the users",
+            data
+        })
+    } catch (error) {
+        console.log(" the errro is " + error)
+        return res.json({
+            msg: " some bs error occured",
+            error
+        })
+    }
+
 
 }
+
+const handleEditUser = async (req: userinfo, res: Response) => {
+    try {
+        const currentusername = req.username
+        const body = req.body
+        // find and update 
+        if (!currentusername) {
+            return res.json({
+                msg: "the user doesnot exist "
+            })
+        }
+        const response = await User.findOneAndUpdate({
+            username: currentusername
+        }, {
+            username: body.username
+        },{ new: true })
+        return res.status(200).json({
+            msg: "edited credintals sucessfully "
+        })
+    } catch (error) {
+        console.log("some error occures" + error)
+        return res.json({
+            msg: " and error ",
+            error
+        })
+    }
+
+}
+
+const handleGetMe = async (req : userinfo, res : Response)=>{
+    const currentusername = req.username
+    if(!currentusername){
+        return res.json({
+            msg : "user not exist"
+        })
+    }
+    const data = await User.findOne({
+        username : currentusername
+    })
+    return res.json({
+        msg : " the user is ",
+        data
+    })
+
+}
+
+
+
+
 export {
     handleGetAllUsers,
-    handleGetAllUsersId
+    handleGetAllUsersId,
+    handleEditUser,
+    handleGetMe
 }
