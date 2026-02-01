@@ -1,11 +1,15 @@
 import express from "express"
 import dotenv from "dotenv"
+import cookieparser from "cookie-parser"
+
 import MainRouter from "./Routes/main.router.js"
+
 
 
 dotenv.config()
 const app = express()
 app.use(express.json())
+app.use(cookieparser())
 
 // routes 
 app.use("/api/v1",MainRouter)
