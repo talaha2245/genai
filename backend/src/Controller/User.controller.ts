@@ -71,7 +71,7 @@ const handleEditUser = async (req: userinfo, res: Response) => {
         // find and update 
         if (!currentusername) {
             return res.json({
-                msg: "the user doesnot exist "
+                msg: "You are not Authroised"
             })
         }
         const response = await User.findOneAndUpdate({
@@ -80,7 +80,7 @@ const handleEditUser = async (req: userinfo, res: Response) => {
             username: body.username
         },{ new: true })
         return res.status(200).json({
-            msg: "edited credintals sucessfully "
+            msg: "Sucessfully edited"
         })
     } catch (error) {
         console.log("some error occures" + error)
@@ -93,6 +93,7 @@ const handleEditUser = async (req: userinfo, res: Response) => {
 }
 
 const handleGetMe = async (req : userinfo, res : Response)=>{
+
     const currentusername = req.username
     if(!currentusername){
         return res.json({
@@ -102,6 +103,11 @@ const handleGetMe = async (req : userinfo, res : Response)=>{
     const data = await User.findOne({
         username : currentusername
     })
+    if(!data){
+        return res.json({
+            msg : " counld not find the user"
+        })
+    }
     return res.json({
         msg : " the user is ",
         data

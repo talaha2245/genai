@@ -2,9 +2,6 @@ import express from "express"
 import { handleUserLogin, handleUserLogout, handleUsersignup } from "../Controller/Auth.controller.js"
 
 const AuthRouter = express.Router()
-// login 
-// singup 
-// 
 
 AuthRouter.post("/signup",handleUsersignup)
 
