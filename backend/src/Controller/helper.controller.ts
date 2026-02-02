@@ -6,6 +6,11 @@ export const verifyUserCookie = (req: any, res: Response, next: NextFunction) =>
     const token = req.cookies["auth_token"];
     // console.log(token)
     const data = jsonwebtoken.verify(token, process.env.JWT_screat!) as JwtPayLoad
+    if(!data){
+      return res.json({
+        msg : " you are not authrised"
+      })
+    }
     req.username = data.username
     next()
   } catch (error) {

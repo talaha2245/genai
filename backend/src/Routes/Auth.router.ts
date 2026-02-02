@@ -6,10 +6,6 @@ const AuthRouter = express.Router()
 // singup 
 // 
 
-interface user1 {
-    username : string ,
-    password : string
-}
 AuthRouter.post("/signup",handleUsersignup)
 
 AuthRouter.post("/login",handleUserLogin)
