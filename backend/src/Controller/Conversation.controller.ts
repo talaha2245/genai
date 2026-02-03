@@ -20,17 +20,18 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
             participants: { $in: [userinfo._id] }
         })
         if (data.length == 0 ) {
+            console.log("hi 123")
             throw new Error(" there are no conversations")
         }
         return res.status(200).json({
             msg: "All converstaion fetched ",
             data
         })
-    } catch (error) {
-        console.log(" the error is " + Error)
+    } catch (error : any) {
+        console.log(" the error is " + error)
         return res.json({
             msg: "error occured",
-            error
+            error : error.message
         })
 
     }
@@ -84,9 +85,10 @@ const handleCreteConversation = async (req: userinfo, res: Response) => {
             msg: 'sucessfullly send the chat '
         })
 
-    } catch (error) {
+    } catch (error : any) {
         return res.status(401).json({
-            msg: "please check the credinatals "
+            msg: "please check the credinatals ",
+            Error : error.message
         })
 
     }
@@ -116,7 +118,7 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
             username: reciver
         })
         if (!sendInfo || !reciverInfo) {
-            throw new Error("You are not Authorised")
+            throw new Error("The user doses not exist")
         }
         // this gives the convertion id 
         const ConversationInfo = await Conversation.findOne({
@@ -136,11 +138,11 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
             msg: "sending the messges",
             data
         })
-    } catch (error) {
+    } catch (error : any) {
         console.log(error)
         return res.status(401).json({
-            msg: "some error ",
-            error
+            msg: "some error",
+            Error : JSON.stringify(error.message)
         })
     }
 }

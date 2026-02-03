@@ -1,6 +1,7 @@
 import { User } from "../Model/db.js"
 import type { userinfo } from "../types/interfaces.js"
 import type { Response } from "express"
+import jsonwebtoken  from "jsonwebtoken"
 
 const handleGetAllUsers = async (req: userinfo, res: Response) => {
     try {
@@ -79,6 +80,9 @@ const handleEditUser = async (req: userinfo, res: Response) => {
         }, {
             username: body.username
         },{ new: true })
+        // gerate the cookie again 
+        const token = jsonwebtoken.sign({username : body.username},process.env.JWT_screat!)
+        res.cookie("auth_token",token)
         return res.status(200).json({
             msg: "Sucessfully edited"
         })
