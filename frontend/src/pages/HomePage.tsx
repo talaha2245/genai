@@ -10,7 +10,7 @@ const HomePage = () => {
         <div className='flex items-center justify-between bg-gray-300 h-20 border-2 w-full'>
             <div className='p-2 flex items-center gap-2' >
                 <div className='rounded-full hover:border-2 border-green-100'>
-                    {/* apple is black */}
+    
                     <img src={profileimage} alt="profile image is not laded" className='w-16 h-16 rounded-full object-cover' />
                 </div>
                 <div className='font-bold text-xl'>
