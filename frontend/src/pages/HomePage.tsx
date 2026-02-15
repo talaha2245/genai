@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { useAtom } from 'jotai'
 import { mainuserdata } from '@/store/user'
-import profileimage from "../assets/images/warren-VVEwJJRRHgk-unsplash.jpg"
 
 const HomePage = () => {
     const [user , _] = useAtom(mainuserdata)
@@ -10,8 +9,7 @@ const HomePage = () => {
         <div className='flex items-center justify-between bg-gray-300 h-20 border-2 w-full'>
             <div className='p-2 flex items-center gap-2' >
                 <div className='rounded-full hover:border-2 border-green-100'>
-    
-                    <img src={profileimage} alt="profile image is not laded" className='w-16 h-16 rounded-full object-cover' />
+                    <img src="/images/warren-VVEwJJRRHgk-unsplash.jpg" alt="profile image is not laded" className='w-16 h-16 rounded-full object-cover' />
                 </div>
                 <div className='font-bold text-xl'>
                     hey! {user.username}
