@@ -10,7 +10,7 @@ ConverstaionRouter.get("/",verifyUserCookie,handleAllUserConversation)
 //this is used to crete a new conversation for the user 
 ConverstaionRouter.post("/",verifyUserCookie, handleCreteConversation)
 
-// getting the conversation with spefic user 
+// // getting the conversation with spefic user 
 ConverstaionRouter.get("/:id",verifyUserCookie,handleGetAllConversationWithSpeficUser)
 
 export default ConverstaionRouter;

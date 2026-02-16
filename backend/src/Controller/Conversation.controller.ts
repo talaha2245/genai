@@ -4,6 +4,7 @@ import { Conversation, Message, User } from "../Model/db.js"
 const handleAllUserConversation = async (req: userinfo, res: Response) => {
     try {
         const Currentuser = req.username
+        console.log("called 2")
         if (!Currentuser) {
             return res.status(200).json({
                 msg: "You are un athrised "
@@ -16,16 +17,29 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
             throw new Error("You are not authroised")
         }
         // this return an arry of converation 
-        const data = await Conversation.find({
+        // we will also return the converstions with the last messsages
+        let data = await Conversation.find({
             participants: { $in: [userinfo._id] }
         })
         if (data.length == 0 ) {
             console.log("hi 123")
             throw new Error(" there are no conversations")
         }
+        let ans = await Promise.all(
+            data.map((item)=>{
+                console.log(item._id)
+                return Message.find({conversationId : item._id})
+            })
+        )
+        if(ans.length == 0){
+            throw new Error(" there are no conversations")
+        }
+        console.log(ans)
         return res.status(200).json({
-            msg: "All converstaion fetched ",
+            msg: "All converstaion fetched talaha",
+            ans,
             data
+
         })
     } catch (error : any) {
         console.log(" the error is " + error)
@@ -41,6 +55,7 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
 const handleCreteConversation = async (req: userinfo, res: Response) => {
     // our task is to crete a converation with user 
     try {
+        console.log("this one called 1")
         const senderUsername = req.username
         const reciverUsername = req.body.username
         const MessageSend = req.body.Message as string
@@ -105,6 +120,7 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
     // if the converstaion is null so there is no converstion done yet 
     // 
     try {
+        console.log("thi is called 3")
         const sender = req.username
         const reciver = req.params.id as string
         // getting the id 
