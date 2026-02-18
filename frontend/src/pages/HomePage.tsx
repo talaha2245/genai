@@ -9,15 +9,16 @@ const HomePage = () => {
     const [conversation , setconversation] = useState({})
 
     const handlellingGettingData = async() =>{
+        console.log("this is being called")
         // this give use the converstion data + last messge attcahed to it 
         const data = await axios({
             method :"GET",
-            url:"http://localhost:3001/api/v1/conversation"
+            url:"http://localhost:3001/api/v1/conversation",
+            withCredentials : true
         })
         setconversation(data)
+        console.log(data.data)
     }
-
-
 
     useEffect(()=>{
         handlellingGettingData()

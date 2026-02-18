@@ -38,7 +38,8 @@ export function LoginForm({
       data :{
         username : username.current,
         password : password.current
-      }
+      },
+      withCredentials : true
     })
     console.log(response.data.msg == "error occured in auth" )
     if (response.data.msg == "error occured in auth"){

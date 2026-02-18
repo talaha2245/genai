@@ -26,28 +26,28 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
         let data = await Conversation.find({
             participants: { $in: [userinfo._id] }
         })
-        if (data.length == 0 ) {
+        if (data.length == 0) {
             throw new Error(" there are no conversations")
         }
         console.log("the last message id is " + data[0]?.lastMessage)
         let ans = await Promise.all(
-            data.map((item)=>{
-                return Message.find({ _id : item.lastMessage!}) // gets the last messge id of all convoserstions  
+            data.map((item) => {
+                return Message.find({ _id: item.lastMessage! }) // gets the last messge id of all convoserstions  
             })
         )
-        if(ans.length == 0){
+        if (ans.length == 0) {
             throw new Error(" there are no messages ")
         }
         return res.status(200).json({
-            msg: "All converstaion fetched talaha",
-            ans,
-            data
+            msg: "sucessfully fetched the data of " + Currentuser,
+            lastMessages_info: ans,
+            Allconvsersations: data
         })
-    } catch (error : any) {
+    } catch (error: any) {
         console.log(" the error is " + error)
         return res.json({
             msg: "error occured",
-            error : error.message
+            error: error.message
         })
 
     }
@@ -61,7 +61,7 @@ const handleCreteConversation = async (req: userinfo, res: Response) => {
         const senderUsername = req.username
         const reciverUsername = req.body.username
         const MessageSend = req.body.Message as string
-        if(senderUsername == reciverUsername){
+        if (senderUsername == reciverUsername) {
             throw new Error(" you can't send the message")
         }
         if (senderUsername == null || reciverUsername == null || MessageSend == null) {
@@ -102,10 +102,10 @@ const handleCreteConversation = async (req: userinfo, res: Response) => {
             msg: 'sucessfullly send the chat '
         })
 
-    } catch (error : any) {
+    } catch (error: any) {
         return res.status(401).json({
             msg: "please check the credinatals ",
-            Error : error.message
+            Error: error.message
         })
 
     }
@@ -157,15 +157,36 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
             msg: "sending the messges",
             data
         })
-    } catch (error : any) {
+    } catch (error: any) {
         console.log(error)
         return res.status(401).json({
             msg: "some error",
-            Error : JSON.stringify(error.message)
+            Error: JSON.stringify(error.message)
         })
     }
 }
 
+const handleGetMessageByid = async (req: userinfo, res: Response) => {
+    try {
+        const Message_id = req.params.id as string
+        const resp = await Message.findOne(({
+            _id: Message_id
+        }))
+        if (!resp) {
+            throw new Error("The messge is not found")
+        }
+        return res.json({
+            msg : "sucessfully retrived messge data",
+            Message_data : resp
+        })
+    } catch (error) {
+        return res.json({
+            msg : "Some error has occured ",
+            Error : error
+        })
+
+    }
+}
 
 export {
     handleAllUserConversation,

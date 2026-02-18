@@ -14,4 +14,9 @@ ConverstaionRouter.post("/",verifyUserCookie, handleCreteConversation)
 // // getting the conversation with spefic user 
 ConverstaionRouter.get("/:id",verifyUserCookie,handleGetAllConversationWithSpeficUser)
 
+
+
+// we will crete a route it take the message id and retuns the message
+ConverstaionRouter.get("/message/:id" , verifyUserCookie)
+
 export default ConverstaionRouter;
