@@ -14,25 +14,41 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import axios from "axios"
+import { baseUrl } from "@/store/user"
+import { useAtom } from "jotai"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  // getting the base url 
+  const [baseurl , _ ] = useAtom(baseUrl)
   // username and passwors
 
   const username = useRef("")
   const password = useRef("")
-
   const handleUserlogin = async() =>{
+    console.log("this is the " + baseurl)
     const response = await axios({
-      method : ""
+      method : "post",
+      url: baseurl + "/auth/login",
+      data :{
+        username : username.current,
+        password : password.current
+      }
     })
+    console.log(response.data.msg == "error occured in auth" )
+    if (response.data.msg == "error occured in auth"){
+      alert("some Errro has occured")
+    }
+    else{
 
+      alert("Sucessfully Logged in ")
+    }
   }
-
 
 
   // useEffect(() => {
@@ -43,6 +59,7 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+       
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
@@ -79,7 +96,8 @@ export function LoginForm({
                 }} />
               </Field>
               <Field>
-                <Button type="submit" onClick={()=>{
+                <Button type="submit" onClick={(e)=>{
+                  e.preventDefault()
                   handleUserlogin()
                 }}>Login</Button>
                 <FieldDescription className="text-center">
@@ -90,6 +108,7 @@ export function LoginForm({
           </form>
         </CardContent>
       </Card>
+    
     </div>
   )
 }

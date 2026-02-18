@@ -9,7 +9,7 @@ export const CurrentLoggedinUser = atom({
 
 })
 
-
+export const baseUrl = atom("http://localhost:3001/api/v1")
 
 export const Someusers = atom([{
     username: "Aarav",
