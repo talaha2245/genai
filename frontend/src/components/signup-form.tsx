@@ -13,8 +13,28 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import axios from "axios"
+import { useRef } from "react"
+import { baseUrl } from "@/store/user"
+import { useAtom } from "jotai"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const [baseurl , _] = useAtom(baseUrl)
+
+  const username = useRef("")
+  const password = useRef("")
+  const handleSubmitButtonClicked = async () =>{
+    const response = await axios({
+      method : "post",
+      url: baseurl + "/auth/signup",
+      data:{
+        username : username.current,
+        password : password.current
+      }
+    })
+    console.log(response.data)
+  }
+
   return (
     <Card {...props}>
       <CardHeader>
@@ -33,10 +53,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             <Field>
               <FieldLabel htmlFor="email">User Name</FieldLabel>
               <Input
-                id="email"
-                type="email"
+                id="Username"
+                type="text"
                 placeholder="m@example.com"
                 required
+                onChange={(e)=>{
+                  username.current = e.target.value
+                }}
               />
               <FieldDescription>
                 We&apos;ll use this to contact you. We will not share your email
@@ -45,7 +68,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" required 
+              onChange={(e)=>{
+                password.current = e.target.value
+              }}
+              />
               <FieldDescription>
                 Must be at least 8 characters long.
               </FieldDescription>
@@ -59,7 +86,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit" onClick={(e)=>{
+                  e.preventDefault()
+                  handleSubmitButtonClicked()
+                  
+                }}>Create Account</Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account? <a href="#">Login</a>
                 </FieldDescription>
