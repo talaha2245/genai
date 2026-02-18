@@ -2,9 +2,14 @@ import type { Response } from "express"
 import type { userinfo } from "../types/interfaces.js"
 import { Conversation, Message, User } from "../Model/db.js"
 const handleAllUserConversation = async (req: userinfo, res: Response) => {
+
+    // waht it does we will fetch the user deatils 
+    // on the bases on the user deatil we will fecth the convos made by user is involved 
+    // by this we ill get the converstion 
+    // on the bases of getting the co=nverstaion we willload the last message 
+    // we can aslo get the messag id and all the messages also 
     try {
         const Currentuser = req.username
-        console.log("called 2")
         if (!Currentuser) {
             return res.status(200).json({
                 msg: "You are un athrised "
@@ -22,24 +27,21 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
             participants: { $in: [userinfo._id] }
         })
         if (data.length == 0 ) {
-            console.log("hi 123")
             throw new Error(" there are no conversations")
         }
+        console.log("the last message id is " + data[0]?.lastMessage)
         let ans = await Promise.all(
             data.map((item)=>{
-                console.log(item._id)
-                return Message.find({conversationId : item._id})
+                return Message.find({ _id : item.lastMessage!}) // gets the last messge id of all convoserstions  
             })
         )
         if(ans.length == 0){
-            throw new Error(" there are no conversations")
+            throw new Error(" there are no messages ")
         }
-        console.log(ans)
         return res.status(200).json({
             msg: "All converstaion fetched talaha",
             ans,
             data
-
         })
     } catch (error : any) {
         console.log(" the error is " + error)
@@ -120,7 +122,6 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
     // if the converstaion is null so there is no converstion done yet 
     // 
     try {
-        console.log("thi is called 3")
         const sender = req.username
         const reciver = req.params.id as string
         // getting the id 
@@ -143,7 +144,9 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
         if (!ConversationInfo) {
             throw new Error("no conversation exist ")
         }
-        // finding the messages with 
+
+        // this is looking great no wee need to diffrenctaitaw who has sent the messge and who has recived the messge 
+        //
         const data = await Message.find({
             conversationId: ConversationInfo._id
         }).sort({ createdAt: -1 }).limit(20)

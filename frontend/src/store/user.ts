@@ -4,6 +4,13 @@ export const mainuserdata = atom({
     username: "Talaha",
     image: "/Users/talahanuman/Desktop/gen-ai/frontend/public/images/warren-VVEwJJRRHgk-unsplash.jpg"
 })
+
+export const CurrentLoggedinUser = atom({
+
+})
+
+
+
 export const Someusers = atom([{
     username: "Aarav",
     image: "frontend/public/images/user1.jpg"
