@@ -1,5 +1,5 @@
 import express from "express"
-import { handleAllUserConversation, handleCreteConversation, handleGetAllConversationWithSpeficUser } from "../Controller/Conversation.controller.js"
+import { handleAllUserConversation, handleCreteConversation, handleGetAllConversationWithSpeficUser, handleGetMessageByid } from "../Controller/Conversation.controller.js"
 import { verifyUserCookie } from "../Controller/helper.controller.js"
 const ConverstaionRouter = express.Router()
 
@@ -15,8 +15,8 @@ ConverstaionRouter.post("/",verifyUserCookie, handleCreteConversation)
 ConverstaionRouter.get("/:id",verifyUserCookie,handleGetAllConversationWithSpeficUser)
 
 
-
 // we will crete a route it take the message id and retuns the message
-ConverstaionRouter.get("/message/:id" , verifyUserCookie)
+// working fine 
+ConverstaionRouter.get("/message/:id" , verifyUserCookie , handleGetMessageByid)
 
 export default ConverstaionRouter;

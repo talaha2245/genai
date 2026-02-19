@@ -4,6 +4,7 @@ import { handleEditUser, handleGetAllUsers, handleGetAllUsersId, handleGetMe } f
 const UserRouter = express.Router()
 UserRouter.get("/",verifyUserCookie ,handleGetAllUsers)
 UserRouter.put("/me",verifyUserCookie ,handleEditUser )
-UserRouter.get("/me",verifyUserCookie, handleGetMe)
+UserRouter.get("/me",verifyUserCookie, handleGetMe) // get me data from the 
+UserRouter.get("/me/:id",verifyUserCookie, handleGetMe)
 UserRouter.get("/:name",verifyUserCookie,handleGetAllUsersId)
 export default UserRouter

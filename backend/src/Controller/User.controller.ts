@@ -97,7 +97,7 @@ const handleEditUser = async (req: userinfo, res: Response) => {
 }
 
 const handleGetMe = async (req : userinfo, res : Response)=>{
-
+    
     const currentusername = req.username
     if(!currentusername){
         return res.json({
@@ -113,9 +113,35 @@ const handleGetMe = async (req : userinfo, res : Response)=>{
         })
     }
     return res.json({
-        msg : " the user is ",
+        msg : "the user is",
         data
     })
+
+}
+
+
+const handleGetSpficUserdata = async (req : userinfo, res : Response)=>{
+    const userid = req.params.id as string
+    try {
+        if(!userid){
+            throw new Error("the user dosent exist")
+        }
+        const userdata = await User.findOne({
+            _id : userid
+        })
+        if(!userdata){
+            throw new Error("The user dosnet enxist")
+        }
+        return res.json({
+            msg : "The User data is ",
+            userdata
+        })
+    } catch (error) {
+        return res.json({
+            msg : "the error occured",
+            error
+        })
+    }
 
 }
 
@@ -126,5 +152,6 @@ export {
     handleGetAllUsers,
     handleGetAllUsersId,
     handleEditUser,
-    handleGetMe
+    handleGetMe,
+    handleGetSpficUserdata
 }

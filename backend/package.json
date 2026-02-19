@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon /Users/talahanuman/Desktop/gen-ai/backend/dist/index.js",
+    "start": "npx nodemon dist/index.cjs",
     "build": "tsup src --out-dir dist --clean"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "tsup": "^8.5.1"
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }

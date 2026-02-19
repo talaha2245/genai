@@ -29,18 +29,18 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
         if (data.length == 0) {
             throw new Error(" there are no conversations")
         }
-        console.log("the last message id is " + data[0]?.lastMessage)
-        let ans = await Promise.all(
-            data.map((item) => {
-                return Message.find({ _id: item.lastMessage! }) // gets the last messge id of all convoserstions  
-            })
-        )
-        if (ans.length == 0) {
-            throw new Error(" there are no messages ")
-        }
+        // console.log("the last message id is " + data[0]?.lastMessage)
+        // let ans = await Promise.all(
+        //     data.map((item) => {
+        //         return Message.find({ _id: item.lastMessage! }) // gets the last messge id of all convoserstions  
+        //     })
+        // )
+        // if (ans.length == 0) {
+        //     throw new Error(" there are no messages ")
+        // }
         return res.status(200).json({
             msg: "sucessfully fetched the data of " + Currentuser,
-            lastMessages_info: ans,
+            // lastMessages_info: ans,
             Allconvsersations: data
         })
     } catch (error: any) {
@@ -51,7 +51,6 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
         })
 
     }
-
 }
 
 const handleCreteConversation = async (req: userinfo, res: Response) => {
@@ -191,5 +190,6 @@ const handleGetMessageByid = async (req: userinfo, res: Response) => {
 export {
     handleAllUserConversation,
     handleCreteConversation,
-    handleGetAllConversationWithSpeficUser
+    handleGetAllConversationWithSpeficUser,
+    handleGetMessageByid
 }

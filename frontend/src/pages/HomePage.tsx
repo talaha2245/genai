@@ -17,7 +17,6 @@ const HomePage = () => {
 
     useEffect(() => {
         let active = true
-
         void (async () => {
             try {
                 const res = await axios({
