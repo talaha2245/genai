@@ -16,8 +16,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRef } from "react"
 import axios from "axios"
-import { baseUrl } from "@/store/user"
+import { baseUrlAtom, CurrentLoggedinUser } from "@/store/user"
 import { useAtom } from "jotai"
+
 
 export function LoginForm({
   className,
@@ -25,13 +26,16 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
 
   // getting the base url 
-  const [baseurl , _ ] = useAtom(baseUrl)
+  const [baseurl] = useAtom(baseUrlAtom)
+  const [, SetCurrentUser] = useAtom(CurrentLoggedinUser)
+
+
   // username and passwors
 
   const username = useRef("")
   const password = useRef("")
   const handleUserlogin = async() =>{
-    console.log("this is the " + baseurl)
+    console.log( baseurl + "/auth/login")
     const response = await axios({
       method : "post",
       url: baseurl + "/auth/login",
@@ -41,13 +45,26 @@ export function LoginForm({
       },
       withCredentials : true
     })
-    console.log(response.data.msg == "error occured in auth" )
+
+    // console.log(response.data.msg == "error occured in auth" )
     if (response.data.msg == "error occured in auth"){
       alert("some Errro has occured")
     }
     else{
-
       alert("Sucessfully Logged in ")
+      // // storing the userobject 
+      const response  = await axios({
+        method : "GET",
+        url : baseurl + "/user/me",
+        withCredentials:true
+      })
+      // console.log(response)
+      if(response.data.msg == "the user is"){
+        console.log("sucess")
+          console.log(response.data.data)
+        SetCurrentUser(response.data.data)
+       
+      }
     }
   }
 

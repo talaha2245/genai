@@ -1,15 +1,15 @@
 import { atom } from "jotai";
+import type { UserDocument } from "@/types/type"
+
 
 export const mainuserdata = atom({
     username: "Talaha",
     image: "/Users/talahanuman/Desktop/gen-ai/frontend/public/images/warren-VVEwJJRRHgk-unsplash.jpg"
 })
 
-export const CurrentLoggedinUser = atom({
+export const CurrentLoggedinUser  = atom<UserDocument |null>()
 
-})
-
-export const baseUrl = atom("http://localhost:3001/api/v1")
+export const baseUrlAtom = atom("http://localhost:3001/api/v1")
 
 export const Someusers = atom([{
     username: "Aarav",

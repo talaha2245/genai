@@ -15,11 +15,11 @@ import {
 import { Input } from "@/components/ui/input"
 import axios from "axios"
 import { useRef } from "react"
-import { baseUrl } from "@/store/user"
+import { baseUrlAtom } from "@/store/user"
 import { useAtom } from "jotai"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const [baseurl , _] = useAtom(baseUrl)
+  const [baseurl] = useAtom(baseUrlAtom)
 
   const username = useRef("")
   const password = useRef("")
