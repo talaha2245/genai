@@ -4,6 +4,7 @@ import { CurrentLoggedinUser } from '@/store/user'
 import type { ChatItem, ConversationResponseStructure } from '@/types/type'
 import { useEffect, useState } from 'react'
 import { baseUrlAtom } from '@/store/user'
+import { FaRegUserCircle } from "react-icons/fa";
 
 
 
@@ -15,7 +16,7 @@ const HomePage = () => {
     const [loading, setloading] = useState(true)
     const [conversation, setconversation] = useState<ConversationResponseStructure[] | null>(null)
     const [baseurl] = useAtom(baseUrlAtom)
-    const [chatMessage , setChatMessage] = useState<ChatItem[] | null>()
+    const [chatMessage, setChatMessage] = useState<ChatItem[] | null>()
 
     useEffect(() => {
         let active = true
@@ -58,7 +59,7 @@ const HomePage = () => {
                     const msgRes = await axios.get(
                         `${baseurl}/conversation/message/${item.lastMessage}`,
                         { withCredentials: true }
-                        
+
                     );
 
                     return {
@@ -75,7 +76,7 @@ const HomePage = () => {
         };
 
         if (conversation && conversation?.length > 0) {
-             fetchUserAndLastMessage();
+            fetchUserAndLastMessage();
 
         }
     }, [conversation]);
@@ -99,27 +100,37 @@ const HomePage = () => {
                 </div>
             </div>
             <div className='w-full h-full bg-gray-600 mt-5 rounded-2xl flex p-5'>
-                <div id='chats' className='h-full w-[40%] bg-green-400 flex flex-col items-center gap-3'>
+                <div id='chats' className='h-full w-[40%] bg-black flex flex-col items-center gap-3'>
                     <h1 className='scroll-m-20 text-center text-2xl font-extrabold tracking-tight text-balance'>chats </h1>
-                    <div id='Rendering chats ' className='flex flex-col w-full items-center gap-3'>
+                    <div id='Rendering chats ' className='flex flex-col w-full items-center gap-2'>
                         {conversation && conversation.length > 0 ? (
-                            conversation.map((item) => (
+                            chatMessage?.map((item) => (
                                 <div
-                                    key={item._id}
-                                    className='w-[95%] bg-green-200 font-bold rounded-xl p-4 flex flex-col hover:bg-green-300 transition-all cursor-pointer'
+                                    // key={item._id}
+                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl cursor-pointer transition"
                                 >
-                                    <div className='text-sm text-gray-800'>
-                                        participants: {item.participants.join(', ')}
+                                    {/* Profile Icon */}
+                                    <div className="text-gray-300 text-4xl">
+                                        <FaRegUserCircle />
                                     </div>
-                                    <div className='text-xs text-gray-700'>
-                                        lastMessage: {item.lastMessage}
+
+                                    {/* Text Section */}
+                                    <div className="flex flex-col w-full overflow-hidden">
+                                        <p className="font-semibold text-white truncate">
+                                            {item.friendDetails.username}
+                                        </p>
+
+                                        {item.lastMessage?.content && (
+                                            <p className="text-gray-400 text-sm truncate">
+                                                {item.lastMessage.content}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <div className='text-sm text-gray-900'>No conversations yet.</div>
+                            <p className="text-gray-500 text-center mt-5">No conversations found</p>
                         )}
-
                     </div>
                 </div>
 

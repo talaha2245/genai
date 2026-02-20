@@ -120,7 +120,7 @@ const handleGetMe = async (req : userinfo, res : Response)=>{
 
 
 const handleGetSpficUserdata = async (req : userinfo, res : Response)=>{
-    console.log("thi is being called")
+    // console.log("thi is being called")
     const userid = req.params.id as string
     try {
         if(!userid){
