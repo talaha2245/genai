@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useAtom } from 'jotai'
 import { CurrentLoggedinUser } from '@/store/user'
-import type { ConversationResponseStructure } from '@/types/type'
+import type { ChatItem, ConversationResponseStructure } from '@/types/type'
 import { useEffect, useState } from 'react'
 import { baseUrlAtom } from '@/store/user'
 
@@ -9,11 +9,13 @@ import { baseUrlAtom } from '@/store/user'
 
 import axios from 'axios'
 
+
 const HomePage = () => {
     const [user] = useAtom(CurrentLoggedinUser)
     const [loading, setloading] = useState(true)
     const [conversation, setconversation] = useState<ConversationResponseStructure[] | null>(null)
     const [baseurl] = useAtom(baseUrlAtom)
+    const [chatMessage , setChatMessage] = useState<ChatItem[] | null>()
 
     useEffect(() => {
         let active = true
@@ -35,6 +37,48 @@ const HomePage = () => {
             active = false
         }
     }, [baseurl])
+
+    useEffect(() => {
+        const fetchUserAndLastMessage = async () => {
+            const result = await Promise.all(
+                conversation!.map(async (item) => {
+                    // find the other user
+                    const anotherUserId =
+                        item.participants[0] === user?._id
+                            ? item.participants[1]
+                            : item.participants[0];
+
+                    // fetch friend details
+                    const friendRes = await axios.get(
+                        `${baseurl}/user/me/${anotherUserId}`,
+                        { withCredentials: true }
+                    );
+
+                    // fetch last message
+                    const msgRes = await axios.get(
+                        `${baseurl}/conversation/message/${item.lastMessage}`,
+                        { withCredentials: true }
+                        
+                    );
+
+                    return {
+                        friendDetails: friendRes.data.userdata,
+                        lastMessage: msgRes.data.Message_data,
+                    };
+                })
+            );
+
+            // TODO: store in state →
+            // setSidebarData(result)
+            console.log("FINAL RESULT", result);
+            setChatMessage(result);
+        };
+
+        if (conversation && conversation?.length > 0) {
+             fetchUserAndLastMessage();
+
+        }
+    }, [conversation]);
     if (loading) {
         return <><div>Loading</div></>
     }
@@ -75,41 +119,6 @@ const HomePage = () => {
                         ) : (
                             <div className='text-sm text-gray-900'>No conversations yet.</div>
                         )}
-                        {/* we will collect all the conversation on the basis connection request 
-                    and we will fecth cthe last messge of teh conversation 
-                    we wll render the username oin the based on the messge created  */}
-                        {/* {conversation && conversation.length > 0 && conversation.map((item) => {
-                            let anotheruserdata;
-                            if (item.participants[0] == user?._id) {
-                                anotheruserdata = handlegettingAnotheruserData(item.participants[1])
-                            }
-                            else {
-                                anotheruserdata = handlegettingAnotheruserData(item.participants[0])
-                            }
-                            const lastMessage = handleLastMessge(item.lastMessage)
-                            // console.log("entrered" + item.createdAt)
-                            console.log(anotheruserdata)
-                            console.log(lastMessage)
-                            return (
-                                <div>Hi </div>
-                                // <div className='w-[95%] bg-green-200 font-bold rounded-xl p-4 flex justify-between items-center hover:bg-green-300 transition-all cursor-pointer'>
-
-                                //     <div className='flex flex-col'>
-                                //         <span className='text-lg'>
-                                //             {anotheruserdata?.username}
-                                //         </span>
-                                //         <span className='text-sm font-normal text-gray-700 truncate max-w-[200px]'>
-                                //             {lastMessage?.content}
-                                //         </span>
-                                //     </div>
-
-                                //     <div className='text-xs font-normal text-gray-600'>
-                                //         {lastMessage?.createdAt}
-                                //     </div>
-
-                                // </div>
-                            )
-                        })} */}
 
                     </div>
                 </div>

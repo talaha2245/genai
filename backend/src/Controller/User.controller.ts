@@ -96,8 +96,7 @@ const handleEditUser = async (req: userinfo, res: Response) => {
 
 }
 
-const handleGetMe = async (req : userinfo, res : Response)=>{
-    
+const handleGetMe = async (req : userinfo, res : Response)=>{    
     const currentusername = req.username
     if(!currentusername){
         return res.json({
@@ -121,6 +120,7 @@ const handleGetMe = async (req : userinfo, res : Response)=>{
 
 
 const handleGetSpficUserdata = async (req : userinfo, res : Response)=>{
+    console.log("thi is being called")
     const userid = req.params.id as string
     try {
         if(!userid){

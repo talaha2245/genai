@@ -4,9 +4,9 @@ import type { JwtPayLoad } from "../types/interfaces.js";
 export const verifyUserCookie = (req: any, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies["auth_token"];
-    console.log("the token is " + token)
+
     const data = jsonwebtoken.verify(token, process.env.JWT_screat!) as JwtPayLoad
-    console.log("the data is " + data)
+
     if(!data){
       return res.json({
         msg : " you are not authrised"

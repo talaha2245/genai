@@ -22,3 +22,7 @@ export type MessageType = {
     createdAt : string,
     updatedAt : string,
 }
+export type ChatItem = {
+  friendDetails: any;
+  lastMessage: any;
+};
