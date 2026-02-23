@@ -16,7 +16,6 @@ const ChatWithUser = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [Refresh, setRefresh] = useAtom(RefresherAtom)
   const [websocket] = useAtom(websocketAtom)
-
   useEffect(() => {
     if (!websocket) return;
     websocket.onmessage = (event) => {
@@ -27,7 +26,6 @@ const ChatWithUser = () => {
         setMessages((prev) => [...prev, data.message]);
       }
     };
-
     return () => {
       websocket.onmessage = null;
     }

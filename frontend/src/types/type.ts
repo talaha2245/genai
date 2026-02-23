@@ -2,25 +2,26 @@ export type UserDocument = {
   _id: string
   username: string
   password: string
+  image?: string
   __v: number
 }
 
 export type ConversationResponseStructure = {
-    _id : string,
-    participants : string[],
-    isGroup : boolean,
-    lastMessage : string,
-    createdAt : string,
-    updatedAt : string,
-    __v : number
+  _id: string,
+  participants: string[],
+  isGroup: boolean,
+  lastMessage: string,
+  createdAt: string,
+  updatedAt: string,
+  __v: number
 }
 
 export type MessageType = {
-    conversationId : string,
-    senderId : string,
-    content : string,
-    createdAt : string,
-    updatedAt : string,
+  conversationId: string,
+  senderId: string,
+  content: string,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export type ChatItem = {

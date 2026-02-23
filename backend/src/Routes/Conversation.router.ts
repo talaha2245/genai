@@ -3,7 +3,6 @@ import { handleAllUserConversation, handleCreteConversation, handleGetAllConvers
 import { verifyUserCookie } from "../Controller/helper.controller.js"
 const ConverstaionRouter = express.Router()
 
-
 // get all converation of user 
 // and the last messge id 
 ConverstaionRouter.get("/",verifyUserCookie,handleAllUserConversation)

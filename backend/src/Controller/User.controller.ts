@@ -1,7 +1,7 @@
 import { User } from "../Model/db.js"
 import type { userinfo } from "../types/interfaces.js"
 import type { Response } from "express"
-import jsonwebtoken  from "jsonwebtoken"
+import jsonwebtoken from "jsonwebtoken"
 
 const handleGetAllUsers = async (req: userinfo, res: Response) => {
     try {
@@ -17,8 +17,12 @@ const handleGetAllUsers = async (req: userinfo, res: Response) => {
                 return true
             }
             return false
-        }).map((items) => {
-            return items.username
+        }).map((item) => {
+            return {
+                _id: item._id,
+                username: item.username,
+                image: item.image
+            }
         })
         return res.status(200).json({
             msg: "sucessfull",
@@ -79,10 +83,10 @@ const handleEditUser = async (req: userinfo, res: Response) => {
             username: currentusername
         }, {
             username: body.username
-        },{ new: true })
+        }, { new: true })
         // gerate the cookie again 
-        const token = jsonwebtoken.sign({username : body.username},process.env.JWT_screat!)
-        res.cookie("auth_token",token)
+        const token = jsonwebtoken.sign({ username: body.username }, process.env.JWT_screat!)
+        res.cookie("auth_token", token)
         return res.status(200).json({
             msg: "Sucessfully edited"
         })
@@ -96,49 +100,49 @@ const handleEditUser = async (req: userinfo, res: Response) => {
 
 }
 
-const handleGetMe = async (req : userinfo, res : Response)=>{    
+const handleGetMe = async (req: userinfo, res: Response) => {
     const currentusername = req.username
-    if(!currentusername){
+    if (!currentusername) {
         return res.json({
-            msg : "user not exist"
+            msg: "user not exist"
         })
     }
     const data = await User.findOne({
-        username : currentusername
+        username: currentusername
     })
-    if(!data){
+    if (!data) {
         return res.json({
-            msg : " counld not find the user"
+            msg: " counld not find the user"
         })
     }
     return res.json({
-        msg : "the user is",
+        msg: "the user is",
         data
     })
 
 }
 
 
-const handleGetSpficUserdata = async (req : userinfo, res : Response)=>{
+const handleGetSpficUserdata = async (req: userinfo, res: Response) => {
     // console.log("thi is being called")
     const userid = req.params.id as string
     try {
-        if(!userid){
+        if (!userid) {
             throw new Error("the user dosent exist")
         }
         const userdata = await User.findOne({
-            _id : userid
+            _id: userid
         })
-        if(!userdata){
+        if (!userdata) {
             throw new Error("The user dosnet enxist")
         }
         return res.json({
-            msg : "The User data is ",
+            msg: "The User data is ",
             userdata
         })
     } catch (error) {
         return res.json({
-            msg : "the error occured",
+            msg: "the error occured",
             error
         })
     }

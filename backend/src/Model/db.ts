@@ -14,6 +14,10 @@ const Userschema = new mongoose.Schema({
     password: {
         type: String,
         require: true
+    },
+    image: {
+        type: String,
+        default: "/images/warren-VVEwJJRRHgk-unsplash.jpg"
     }
 })
 
@@ -62,10 +66,10 @@ const ConversationSchema = new mongoose.Schema(
 );
 
 const User = mongoose.model("user", Userschema)
-const Message = mongoose.model("Message" , MessageSchema)
-const Conversation = mongoose.model("Conversation" , ConversationSchema)
+const Message = mongoose.model("Message", MessageSchema)
+const Conversation = mongoose.model("Conversation", ConversationSchema)
 
-export{
+export {
     User,
     Message,
     Conversation
