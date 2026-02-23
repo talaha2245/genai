@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { websocketAtom } from "@/store/user"
 import {
   Card,
   CardContent,
@@ -25,10 +27,11 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
 
+  const [websocket , setwebsocket ] = useAtom(websocketAtom)
   // getting the base url 
   const [baseurl] = useAtom(baseUrlAtom)
   const [, SetCurrentUser] = useAtom(CurrentLoggedinUser)
-
+  const navigate = useNavigate()
 
   // username and passwors
 
@@ -52,28 +55,26 @@ export function LoginForm({
     }
     else{
       alert("Sucessfully Logged in ")
-      // // storing the userobject 
       const response  = await axios({
         method : "GET",
         url : baseurl + "/user/me",
         withCredentials:true
       })
-      // console.log(response)
       if(response.data.msg == "the user is"){
-        console.log("sucess")
-          console.log(response.data.data)
+       try {
+         console.log("sucess")
+        console.log(response.data.data)
         SetCurrentUser(response.data.data)
+        const ws = new WebSocket(`ws://localhost:3001?userId=${response.data.data._id}`)
+        setwebsocket(ws)
+        navigate("/Home")
+       } catch (error) {
+        console.log("err oceeures" + error)
+       }
        
       }
     }
   }
-
-
-  // useEffect(() => {
-  //   handleUserlogin()
-  // }, [])
-
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -117,6 +118,8 @@ export function LoginForm({
                 <Button type="submit" onClick={(e)=>{
                   e.preventDefault()
                   handleUserlogin()
+                  // impolemsnting websockets 
+                
                 }}>Login</Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>

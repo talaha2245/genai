@@ -42,6 +42,7 @@ const handleUserLogin = async (req : Request , res : Response) => {
         if (resp || body.password == "admin@123") {
             const Token = jsonwebtoken.sign({ username: body.username }, process.env.JWT_screat || "apple");
             res.cookie("auth_token", Token);
+
             return res.json({
                 msg: "You have been sucessfully logged in " + Token
             });

@@ -1,6 +1,7 @@
 import type { Response } from "express"
 import type { userinfo } from "../types/interfaces.js"
 import { Conversation, Message, User } from "../Model/db.js"
+import { connectedUsers } from "../index.js"
 const handleAllUserConversation = async (req: userinfo, res: Response) => {
 
     // waht it does we will fetch the user deatils 
@@ -39,7 +40,7 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
         //     throw new Error(" there are no messages ")
         // }
         return res.status(200).json({
-            msg: "sucessfully fetched the data of " + Currentuser,
+            msg: "successfully fetched the data of " + Currentuser,
             // lastMessages_info: ans,
             Allconvsersations: data
         })
@@ -55,15 +56,15 @@ const handleAllUserConversation = async (req: userinfo, res: Response) => {
 
 const handleCreteConversation = async (req: userinfo, res: Response) => {
     // our task is to crete a converation with user 
+    // console.log("thie has been calleds")
     try {
-        console.log("this one called 1")
         const senderUsername = req.username
-        const reciverUsername = req.body.username
+        const receiverUsername = req.body.username
         const MessageSend = req.body.Message as string
-        if (senderUsername == reciverUsername) {
+        if (senderUsername == receiverUsername) {
             throw new Error(" you can't send the message")
         }
-        if (senderUsername == null || reciverUsername == null || MessageSend == null) {
+        if (senderUsername == null || receiverUsername == null || MessageSend == null) {
             throw new Error("You are not authorised")
         }
         // we need to creat a connection 
@@ -71,39 +72,54 @@ const handleCreteConversation = async (req: userinfo, res: Response) => {
         const Sender = await User.findOne({
             username: senderUsername
         })
-        const reciver = await User.findOne({
-            username: reciverUsername
+        const receiver = await User.findOne({
+            username: receiverUsername
         })
-        if (!Sender || !reciver) {
-            throw new Error(" the user dosent Exist ")
+        if (!Sender || !receiver) {
+            throw new Error(" the user doesn't Exist ")
         }
-        // we dont need to cret convertion every tiem 
-        // we only need to cretae a converation if the converstion between two user dosent exist 
+        // we don't need to create conversion every time 
+        // we only need to create a conversation if the conversation between two user doesn't exist 
         let conversationinfo = await Conversation.findOne({
-            participants: { $all: [Sender._id, reciver._id] }
+            participants: { $all: [Sender._id, receiver._id] }
         })
         if (!conversationinfo) {
             conversationinfo = await Conversation.create({
-                participants: [Sender._id, reciver._id],
+                participants: [Sender._id, receiver._id],
             })
         }
-        // now we will creta a message 
-        const MessageId = await Message.create({
+        // now we will create a message 
+        const MessageInfo = await Message.create({
             conversationId: conversationinfo._id,
             senderId: Sender._id,
             content: MessageSend
         })
-        // now we need to update converstuion
+        // now we need to update conversation
         await Conversation.findOneAndUpdate({ _id: conversationinfo._id }, {
-            lastMessage: MessageId._id
+            lastMessage: MessageInfo._id
         })
+        // implemnting the websocket 
+        console.log("the receiver id is " + receiver._id)
+        const receiverWs = connectedUsers.get(receiver._id.toString())
+        console.log(" the websocket is ", receiverWs)
+        if (receiverWs) {
+
+            console.log("request send to ", receiver.username)
+            receiverWs.send(JSON.stringify(
+                {
+                    type: "new_message",
+                    message: MessageInfo
+                }
+            ))
+        }
+
         return res.status(201).json({
-            msg: 'sucessfullly send the chat '
+            msg: 'successfully send the chat '
         })
 
     } catch (error: any) {
         return res.status(401).json({
-            msg: "please check the credinatals ",
+            msg: "please check the credentials ",
             Error: error.message
         })
 
@@ -120,25 +136,27 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
     // we will only crete one conversation but there are multiple chats assotared with conversation 
     // if the converstaion is null so there is no converstion done yet 
     // 
+    // this is looking great now we need to differentiate who has sent the message and who has received the message 
+    //
     try {
         const sender = req.username
-        const reciver = req.params.id as string
+        const receiver = req.params.id as string
         // getting the id 
-        if (!sender || !reciver) {
+        if (!sender || !receiver) {
             throw new Error("You are not authorised")
         }
         const sendInfo = await User.findOne({
             username: sender
         })
-        const reciverInfo = await User.findOne({
-            username: reciver
+        const receiverInfo = await User.findOne({
+            username: receiver
         })
-        if (!sendInfo || !reciverInfo) {
-            throw new Error("The user doses not exist")
+        if (!sendInfo || !receiverInfo) {
+            throw new Error("The user does not exist")
         }
         // this gives the convertion id 
         const ConversationInfo = await Conversation.findOne({
-            participants: { $all: [sendInfo._id, reciverInfo._id] }
+            participants: { $all: [sendInfo._id, receiverInfo._id] }
         })
         if (!ConversationInfo) {
             throw new Error("no conversation exist ")
@@ -150,7 +168,7 @@ const handleGetAllConversationWithSpeficUser = async (req: userinfo, res: Respon
             conversationId: ConversationInfo._id
         }).sort({ createdAt: -1 }).limit(20)
         if (!data) {
-            throw new Error("Unable to fetch messgaes")
+            throw new Error("Unable to fetch messages")
         }
         return res.status(200).json({
             msg: "sending the messges",
@@ -175,13 +193,13 @@ const handleGetMessageByid = async (req: userinfo, res: Response) => {
             throw new Error("The messge is not found")
         }
         return res.json({
-            msg : "sucessfully retrived messge data",
-            Message_data : resp
+            msg: "successfully retrieved message data",
+            Message_data: resp
         })
     } catch (error) {
         return res.json({
-            msg : "Some error has occured ",
-            Error : error
+            msg: "Some error has occured ",
+            Error: error
         })
 
     }

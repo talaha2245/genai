@@ -2,12 +2,19 @@ import './App.css'
 import HomePage from './pages/HomePage'
 import Login from './pages/Login'
 
+import {Route , Routes} from "react-router-dom"
+import Signup from './pages/Signup'
+
+
 function App() {
-
-
   return <> 
-  <HomePage></HomePage>
-  {/* <Login></Login> */}
+  <Routes >
+    <Route element = {<HomePage></HomePage>} path='/Home'/>
+    <Route element = {<Login></Login>} path='/login' />
+    <Route element = {<Login></Login>} path='/' />
+    <Route element = {<Signup></Signup>} path="/singup"/>
+  </Routes>
+  
   </>
 }
 

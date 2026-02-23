@@ -7,9 +7,16 @@ export const mainuserdata = atom({
     image: "/Users/talahanuman/Desktop/gen-ai/frontend/public/images/warren-VVEwJJRRHgk-unsplash.jpg"
 })
 
-export const CurrentLoggedinUser  = atom<UserDocument |null>()
+export const websocketAtom = atom<WebSocket>()
+
+export const CurrentLoggedinUser = atom<UserDocument | null>()
+
+export const RefresherAtom = atom<number>(0)
 
 export const baseUrlAtom = atom("http://localhost:3001/api/v1")
+
+export const selectedUserAtom = atom<any>(null)
+export const openChatAtom = atom(false)
 
 export const Someusers = atom([{
     username: "Aarav",
